@@ -1,19 +1,8 @@
-# vue_practice
+## Simple "drag and drop contacts" project for Vue.js
+### Nov. 2019
 
-## Project setup
-```
-npm install
-```
+Following along tutorial for this simple Vue.js and Tailwind
+project in order to learn the basic Vue.js syntax.
 
-### Compiles and hot-reloads for development
-```
-npm run serve
-```
-
-### Compiles and minifies for production
-```
-npm run build
-```
-
-### Customize configuration
-See [Configuration Reference](https://cli.vuejs.org/config/).
+**Source:**
+https://codesandbox.io/s/draggable-user-lists-with-vuejs-and-tailwind-ypp63
