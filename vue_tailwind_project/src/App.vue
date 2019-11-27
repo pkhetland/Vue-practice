@@ -4,7 +4,7 @@
     class="min-h-screen w-screen bg-gray-200 flex flex-col pt-20 justify-center items-center md:items-start md:flex-row"
   >
     <div class="w-full max-w-md text-center px-3">
-      <p class="mb-2 text-gray-700 font-semibold font-sans tracking-wide">List 1</p>
+      <h1 class="mb-2 text-gray-700 font-semibold font-sans tracking-wide">Kompani 1</h1>
       <draggable
         tag="ul"
         group="all-users"
@@ -25,7 +25,7 @@
     </div>
 
     <div class="w-full max-w-md md:ml-6 text-center px-3">
-      <p class="mb-2 text-gray-700 font-semibold font-sans tracking-wide">List 2</p>
+      <h1 class="mb-2 text-gray-700 font-semibold font-sans tracking-wide">Kompani 2</h1>
       <draggable
         tag="ul"
         group="all-users"
