@@ -11,6 +11,9 @@
     "axios": "^0.18.1",
     "bootstrap": "^4.3.1",
     "core-js": "^3.4.3",
+    "interact-js": "^2.1.0",
+    "interact.js": "^1.2.8",
+    "sass-loader": "^8.0.0",
     "vue": "^2.6.10",
     "vue-router": "^3.1.3"
   },
