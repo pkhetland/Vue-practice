@@ -1,14 +1,19 @@
 <template>
   <div class='header'>
-    <h1>
-      Test header!
-    </h1>
+    <p class='roundCounter'>
+      Round 1
+    </p>
   </div>
 </template>
 
 <style lang="scss" scoped>
 .header {
-  margin: 50px;
+  margin-bottom: 20px;
+  margin-top: 10px;
   color: whitesmoke;
+}
+
+.roundCounter {
+  font-size: 1rem;
 }
 </style>

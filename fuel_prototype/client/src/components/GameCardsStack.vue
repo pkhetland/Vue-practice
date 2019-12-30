@@ -1,5 +1,5 @@
 <template>
-    <div class="cards">
+  <div class="col-12 gamecardcol">
     <GameCard
       v-for="(card, index) in cards"
       :key="card"
@@ -10,30 +10,34 @@
       @cardSkipped="$emit('cardSkipped');"
       @hideCard="$emit('hideCard');"
       />
-    </div>
+  </div>
 </template>
 
 <script>
-import GameCard from './GameCard.vue';
+import GameCard from './GameCard.vue'
 
 export default {
   components: {
-    GameCard,
+    GameCard
   },
 
   props: {
     cards: {
       type: Array,
-      required: true,
-    },
-  },
+      required: true
+    }
+  }
 
-};
+}
 </script>
 
 <style lang="scss" scoped>
-.cards {
-  min-height: 400px;
-  justify-self: center;
+
+.gamecardcol {
+  position: relative;
+  height: 450px;
+  padding: 0;
+  align-content: center;
+  justify-content: center;
 }
 </style>

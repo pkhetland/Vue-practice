@@ -1,29 +1,29 @@
 <template>
-<b-row
-  v-if='isShowing'
-  ref="interactElement"
-  :class="{
-    isAnimating: isInteractAnimating,
-    isCurrent: isCurrent
-  }"
-  class="card"
-  :style='{ transform: transformString }'
->
-  <b-col>
-    <h3 class= "cardTitle">{{ card.title }}</h3>
-  </b-col>
-  <b-col>
-    <p class= "cardText">{{ card.text }}</p>
-  </b-col>
-</b-row>
+  <b-row
+    v-if='isShowing'
+    ref="interactElement"
+    :class="{
+      isAnimating: isInteractAnimating,
+      isCurrent: isCurrent
+    }"
+    class="card"
+    :style='{ transform: transformString }'
+  >
+    <b-col>
+      <h3 class= "cardTitle">{{ card.title }}</h3>
+    </b-col>
+    <b-col>
+      <p class= "cardText">{{ card.text }}</p>
+    </b-col>
+  </b-row>
 </template>
 
 <script>
-import interact from 'interact.js';
+import interact from 'interact.js'
 
-const ACCEPT_CARD = 'cardAccepted';
-const REJECT_CARD = 'cardRejected';
-const SKIP_CARD = 'cardSkipped';
+const ACCEPT_CARD = 'cardAccepted'
+const REJECT_CARD = 'cardRejected'
+const SKIP_CARD = 'cardSkipped'
 
 export default {
   static: {
@@ -31,21 +31,21 @@ export default {
     interactOutOfSightXCoordinate: 500,
     interactOutOfSightYCoordinate: 600,
     interactYThreshold: 150,
-    interactXThreshold: 100,
+    interactXThreshold: 100
   },
 
   props: {
     card: {
       type: Object,
-      required: true,
+      required: true
     },
     isCurrent: {
       type: Boolean,
-      required: true,
-    },
+      required: true
+    }
   },
 
-  data() {
+  data () {
     return {
       isShowing: true,
       isInteractAnimating: true,
@@ -53,125 +53,125 @@ export default {
       interactPosition: {
         x: 0,
         y: 0,
-        rotation: 0,
+        rotation: 0
       },
       title: '',
-      id: null,
-    };
+      id: null
+    }
   },
 
   computed: {
-    transformString() {
+    transformString () {
       if (!this.isInteractAnimating || this.isInteractDragged) {
-        const { x, y, rotation } = this.interactPosition;
-        return `translate3D(${x}px, ${y}px, 0) rotate(${rotation}deg)`;
+        const { x, y, rotation } = this.interactPosition
+        return `translate3D(${x}px, ${y}px, 0) rotate(${rotation}deg)`
       }
 
-      return null;
-    },
+      return null
+    }
   },
 
-  mounted() {
-    const element = this.$refs.interactElement;
+  mounted () {
+    const element = this.$refs.interactElement
 
     interact(element).draggable({
       onstart: () => {
-        this.isInteractAnimating = false;
+        this.isInteractAnimating = false
       },
 
       onmove: (event) => {
         const {
           interactMaxRotation,
-          interactXThreshold,
-        } = this.$options.static;
-        const x = this.interactPosition.x + event.dx;
-        const y = this.interactPosition.y + event.dy;
+          interactXThreshold
+        } = this.$options.static
+        const x = this.interactPosition.x + event.dx
+        const y = this.interactPosition.y + event.dy
 
-        let rotation = interactMaxRotation * (x / interactXThreshold);
+        let rotation = interactMaxRotation * (x / interactXThreshold)
 
-        if (rotation > interactMaxRotation) rotation = interactMaxRotation;
-        else if (rotation < -interactMaxRotation) rotation = -interactMaxRotation;
+        if (rotation > interactMaxRotation) rotation = interactMaxRotation
+        else if (rotation < -interactMaxRotation) rotation = -interactMaxRotation
 
-        this.interactSetPosition({ x, y, rotation });
+        this.interactSetPosition({ x, y, rotation })
       },
 
       onend: () => {
-        const { x, y } = this.interactPosition;
-        const { interactXThreshold, interactYThreshold } = this.$options.static;
-        this.isInteractAnimating = true;
+        const { x, y } = this.interactPosition
+        const { interactXThreshold, interactYThreshold } = this.$options.static
+        this.isInteractAnimating = true
 
-        if (x > interactXThreshold) this.playCard(ACCEPT_CARD);
-        else if (x < -interactXThreshold) this.playCard(REJECT_CARD);
-        else if (y > interactYThreshold) this.playCard(SKIP_CARD);
-        else this.resetCardPosition();
-      },
-    });
+        if (x > interactXThreshold) this.playCard(ACCEPT_CARD)
+        else if (x < -interactXThreshold) this.playCard(REJECT_CARD)
+        else if (y > interactYThreshold) this.playCard(SKIP_CARD)
+        else this.resetCardPosition()
+      }
+    })
   },
 
-  beforeDestroy() {
-    interact(this.$refs.interactElement).unset();
+  beforeDestroy () {
+    interact(this.$refs.interactElement).unset()
   },
 
   methods: {
-    hideCard() {
+    hideCard () {
       setTimeout(() => {
-        this.isShowing = false;
-        this.$emit('hideCard', this.card);
-      }, 300);
+        this.isShowing = false
+        this.$emit('hideCard', this.card)
+      }, 300)
     },
 
-    playCard(interaction) {
+    playCard (interaction) {
       const {
         interactOutOfSightXCoordinate,
         interactOutOfSightYCoordinate,
-        interactMaxRotation,
-      } = this.$options.static;
+        interactMaxRotation
+      } = this.$options.static
 
-      this.interactUnsetElement();
+      this.interactUnsetElement()
 
       switch (interaction) {
         case ACCEPT_CARD:
           this.interactSetPosition({
             x: interactOutOfSightXCoordinate,
-            rotation: interactMaxRotation,
-          });
-          this.$emit(ACCEPT_CARD);
-          break;
+            rotation: interactMaxRotation
+          })
+          this.$emit(ACCEPT_CARD)
+          break
         case REJECT_CARD:
           this.interactSetPosition({
             x: -interactOutOfSightXCoordinate,
-            rotation: -interactMaxRotation,
-          });
-          this.$emit(REJECT_CARD);
-          break;
+            rotation: -interactMaxRotation
+          })
+          this.$emit(REJECT_CARD)
+          break
         case SKIP_CARD:
           this.interactSetPosition({
-            y: interactOutOfSightYCoordinate,
-          });
-          this.$emit(SKIP_CARD);
-          break;
+            y: interactOutOfSightYCoordinate
+          })
+          this.$emit(SKIP_CARD)
+          break
         default:
         // do nothing
       }
 
-      this.hideCard();
+      this.hideCard()
     },
 
-    interactSetPosition(coordinates) {
-      const { x = 0, y = 0, rotation = 0 } = coordinates;
-      this.interactPosition = { x, y, rotation };
+    interactSetPosition (coordinates) {
+      const { x = 0, y = 0, rotation = 0 } = coordinates
+      this.interactPosition = { x, y, rotation }
     },
 
-    interactUnsetElement() {
-      interact(this.$refs.interactElement).unset();
-      this.isInteractDragged = true;
+    interactUnsetElement () {
+      interact(this.$refs.interactElement).unset()
+      this.isInteractDragged = true
     },
 
-    resetCardPosition() {
-      this.interactSetPosition({ x: 0, y: 0, rotation: 0 });
-    },
-  },
-};
+    resetCardPosition () {
+      this.interactSetPosition({ x: 0, y: 0, rotation: 0 })
+    }
+  }
+}
 </script>
 
 <style lang="scss" scoped>
@@ -188,7 +188,7 @@ $fs-card-title: 1.125em;
 .card {
   @include card();
   @include absolute(0);
-  @include sizing(100% 80vw);
+  @include sizing(100% 100vw);
   @include flex-center();
 
   @include after() {
@@ -200,7 +200,9 @@ $fs-card-title: 1.125em;
     background: rgba($c-black, 0.3);
   }
 
-  max-height: 350px;
+  width: 100%;
+  justify-self: center;
+  max-height: 425px;
   margin: auto;
   font-size: $fs-h2;
   font-weight: $fw-bold;
