@@ -1,21 +1,36 @@
 <template>
-  <b-row
+  <b-container
     v-if='isShowing'
     ref="interactElement"
     :class="{
       isAnimating: isInteractAnimating,
       isCurrent: isCurrent
-    }"
+    }
+    "
     class="card"
     :style='{ transform: transformString }'
   >
-    <b-col>
-      <h3 class= "cardTitle">{{ card.title }}</h3>
-    </b-col>
-    <b-col>
-      <p class= "cardText">{{ card.text }}</p>
-    </b-col>
-  </b-row>
+    <b-row class="h-100 w-100 align-content-start justify-content-center">
+      <!-- Card title !-->
+      <b-row class='cardTitleRow h-20 w-100 align-items-center'>
+        <b-col>
+          <p class= "cardCategory mb-0">{{ card.category }}</p>
+        </b-col>
+      </b-row>
+      <!-- Separator !-->
+      <b-row class='dividerCol h-10 w-100 align-items-center'>
+        <b-col>
+          <hr/>
+        </b-col>
+      </b-row>
+      <!-- Card text !-->
+      <b-row class='cardTextCol h-auto w-100 mt-3 align-items-center'>
+        <b-col>
+          <p class= "cardText">{{ card.text }}</p>
+        </b-col>
+      </b-row>
+    </b-row>
+  </b-container>
 </template>
 
 <script>
@@ -113,6 +128,7 @@ export default {
   },
 
   methods: {
+
     hideCard () {
       setTimeout(() => {
         this.isShowing = false
@@ -153,8 +169,8 @@ export default {
         default:
         // do nothing
       }
-
       this.hideCard()
+      this.$emit('triggerChangePlayer')
     },
 
     interactSetPosition (coordinates) {
@@ -178,7 +194,7 @@ export default {
 @import "../styles/index.scss";
 
 $cardsTotal: 3;
-$cardsWidth: 300px;
+// $cardsWidth: 300px;
 $cardsPositionOffset: 55vh * 0.06;
 $cardsScaleOffset: 0.08;
 $defaultTranslation: $cardsPositionOffset * $cardsTotal;
@@ -187,22 +203,20 @@ $fs-card-title: 1.125em;
 
 .card {
   @include card();
-  @include absolute(0);
-  @include sizing(100% 100vw);
+  @include absolute(right 0 left 0);
+  @include sizing(100%);
   @include flex-center();
 
   @include after() {
     @include sizing(21px 3px);
     @include absolute(right 0 bottom 11px left 0);
-
     margin: auto;
     border-radius: 100px;
     background: rgba($c-black, 0.3);
   }
 
   width: 100%;
-  justify-self: center;
-  max-height: 425px;
+  height: 100%;
   margin: auto;
   font-size: $fs-h2;
   font-weight: $fw-bold;
@@ -220,8 +234,6 @@ $fs-card-title: 1.125em;
   pointer-events: none;
   will-change: transform, opacity;
 
-  height: 100vw;
-
   &.isCurrent {
     pointer-events: auto;
   }
@@ -231,9 +243,21 @@ $fs-card-title: 1.125em;
   }
 }
 
-.cardTitle {
-  margin: 0 0 15px;
+hr {
+    display: inline-block;
+    height: 1px;
+    width: 80%;
+    border: 0;
+    border-top: 1px solid lightgray;
+    padding: 0;
+}
+
+.cardCategory {
   font-size: $fs-card-title;
+}
+
+.cardText {
+  text-align: left;
 }
 
 @for $i from 1 through $cardsTotal {

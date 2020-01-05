@@ -1,7 +1,7 @@
 <template>
   <b-container class='container-fluid'>
     <b-row class='row statusbar justify-content-center align-content-center'>
-      <b-col class='col-4 player notActive'>
+      <b-col class='col-4 player' :class="{ notActive: !player1.active }">
         <img class="avatar w-10 h-10 rounded-full" :src="player1.avatar">
         <p class='playerName'>{{ player1.name }}</p>
       </b-col>
@@ -21,7 +21,7 @@
         :show-negatives="false"
         />
       </b-col>
-      <b-col class='col-4 player'>
+      <b-col class='col-4 player' :class="{ notActive: !player2.active }">
         <img class="avatar w-10 h-10 rounded-full" :src="player2.avatar">
         <p class='playerName'>{{ player2.name }}</p>
       </b-col>

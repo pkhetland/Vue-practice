@@ -6,6 +6,7 @@ import App from './App.vue'
 import BootstrapVue from 'bootstrap-vue'
 import VueTailwind from 'vue-tailwind'
 import CircularCountDownTimer from 'vue-circular-count-down-timer'
+import router from './router'
 
 Vue.config.productionTip = false
 Vue.use(BootstrapVue)
@@ -13,5 +14,6 @@ Vue.use(VueTailwind)
 Vue.use(CircularCountDownTimer)
 
 new Vue({
+  router,
   render: h => h(App)
 }).$mount('#app')

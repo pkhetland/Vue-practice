@@ -1,5 +1,5 @@
 <template>
-  <div class="col-12 gamecardcol">
+  <div class="col-12 gamecardcol h-100">
     <GameCard
       v-for="(card, index) in cards"
       :key="card"
@@ -34,10 +34,9 @@ export default {
 <style lang="scss" scoped>
 
 .gamecardcol {
-  position: relative;
-  height: 450px;
   padding: 0;
   align-content: center;
   justify-content: center;
+  max-height: 80vh;
 }
 </style>

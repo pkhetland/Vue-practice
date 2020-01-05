@@ -1,8 +1,9 @@
 import sqlite3
-from flask import Flask, jsonify, g
+from flask import Flask, jsonify, g, request
 from flask_cors import CORS
+from pymysql import NULL
 
-DATABASE = './cards.db'
+DATABASE = 'cards.db'
 
 # configuration
 DEBUG = True
@@ -26,34 +27,64 @@ def close_connection(exception):
     if db is not None:
         db.close()
 
-def query_db(query, args=(), one=False):
-    cur = get_db().execute(query, args)
-    rv = cur.fetchall()
-    cur.close()
-    return (rv[0] if rv else None) if one else rv
-
-def dict_factory(cursor, row):
-    d = {}
-    for idx, col in enumerate(cursor.description):
-        d[col[0]] = row[idx]
-    return d
-
 # Send full card JSON
-@app.route('/cards', methods=['GET'])
+@app.route('/cards', methods=['GET', 'POST'])
 def all_cards():
-    get_db().row_factory = sqlite3.Row
-    cur = get_db().cursor()
-    result = cur.execute("SELECT * FROM cards")
-    return jsonify([dict(zip([key[0] for key in cur.description], row)) for row in result if row['text'] != ""])
+
+    response_object = {'status': 'success'}
+
+    if request.method == 'POST':
+        post_data = request.json
+        cur = get_db().cursor()
+        if post_data.get('function') == 'add':
+            cur.execute('INSERT INTO cards (title, category, text, rating) VALUES (?, ?, ?, ?)', 
+            (post_data.get('title'), post_data.get('category'), post_data.get('text'), 0))
+            get_db().commit()
+            response_object['message'] = 'Card added!'
+
+        elif post_data.get('function') == 'increase':
+
+            rating = int(post_data.get('rating')) + 1
+            cur.execute('UPDATE cards SET rating=? WHERE id=?', (rating, post_data.get('id')))
+            get_db().commit()
+            response_object['message'] = 'Rating updated!'
+            response_object['new rating'] = rating
+
+        elif post_data.get('function') == 'decrease':
+            rating = int(post_data.get('rating')) - 1
+            cur.execute('UPDATE cards SET rating=? WHERE id=?', (rating, post_data.get('id')))
+            get_db().commit()
+            response_object['message'] = 'Rating updated!'
+            response_object['new rating'] = rating
+        return jsonify(response_object, cur.lastrowid)
+
+    if request.method == 'GET':
+        get_db().row_factory = sqlite3.Row
+        cur = get_db().cursor()
+        result = cur.execute("SELECT * FROM cards")
+        return jsonify([dict(zip([key[0] for key in cur.description], row)) for row in result if row['text'] != ""])
 
 # Send categorical card JSONs
-@app.route('/relationship', methods=['GET'])
+@app.route('/parkort', methods=['GET'])
 def relationship_category():
     get_db().row_factory = sqlite3.Row
     cur = get_db().cursor()
-    result = cur.execute("SELECT * FROM cards WHERE category='relationship'")
+    result = cur.execute("SELECT * FROM cards WHERE category='Parkort'")
     return jsonify([dict(zip([key[0] for key in cur.description], row)) for row in result])
 
+@app.route('/vennekort', methods=['GET'])
+def friendship_category():
+    get_db().row_factory = sqlite3.Row
+    cur = get_db().cursor()
+    result = cur.execute("SELECT * FROM cards WHERE category='Vennekort'")
+    return jsonify([dict(zip([key[0] for key in cur.description], row)) for row in result])
+
+@app.route('/utfordring', methods=['GET'])
+def challenge_category():
+    get_db().row_factory = sqlite3.Row
+    cur = get_db().cursor()
+    result = cur.execute("SELECT * FROM cards WHERE category='Utfordring'")
+    return jsonify([dict(zip([key[0] for key in cur.description], row)) for row in result])
 
 if __name__ == '__main__':
     app.run()

@@ -1,39 +1,64 @@
 <template>
-  <b-container>
-    <b-row class='footer justify-content-center align-content-center'>
-      <b-col class='icon icon1 col-4'>
-        <skip-back-icon size="2x" class="custom-class"/>
-      </b-col>
-      <b-col class='icon icon2 col-4'>
-        <star-icon size="2x" class="custom-class"/>
-      </b-col>
-      <b-col class='icon icon2 col-4'>
-        <skip-forward-icon size="2x" class="custom-class"/>
-      </b-col>
-    </b-row>
-  </b-container>
+  <b-row class='w-100 h-25 justify-content-around'>
+    <b-col class='icon icon2 col-3'>
+      <thumbs-down-icon
+      size="2x"
+      color="#E56565"
+      class=""
+      @click="$emit('decreaseRating')"
+      />
+    </b-col>
+    <b-col class='icon icon2 col-3'>
+      <!-- <star-icon
+      size="2x"
+      color="gold"
+      class=""
+      @click="$emit('triggerStarCard');"/> -->
+    </b-col>
+    <b-col class='icon icon2 col-3'>
+      <thumbs-up-icon
+      size="2x"
+      color="#4BB182"
+      class=""
+      @click="$emit('increaseRating')"
+      />
+    </b-col>
+  </b-row>
 </template>
 
 <script>
-import { SkipBackIcon, StarIcon, SkipForwardIcon } from 'vue-feather-icons'
+import { ThumbsUpIcon, ThumbsDownIcon } from 'vue-feather-icons'
 export default {
+  data () {
+    return {
+      thumbsUpDeactive: false,
+      thumbsDownDeactive: false
+    }
+  },
   components: {
-    SkipBackIcon,
-    StarIcon,
-    SkipForwardIcon
+    /* StarIcon, */
+    ThumbsUpIcon,
+    ThumbsDownIcon
+  },
+  methods: {
+    hideCard () {
+      this.$emit('hideCard', this.$parent.visibleCards[0])
+    }
   }
 }
 </script>
 
-<style lang="scss" scoped>
+<style scoped>
 .footer {
-  margin-bottom: 20px;
-  margin-top: 10px;
   color: whitesmoke;
+  }
+
+svg {
+  display: inline-block;
 }
 
-.icon {
-  display: inline-block
+.test {
+  color: white;
 }
 
 </style>
